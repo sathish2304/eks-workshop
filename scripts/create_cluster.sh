@@ -41,7 +41,7 @@ echo "Creating KMS Customer Managed Key for EKS"
 export ACCOUNT_ID=$(aws sts get-caller-identity --output text --query Account)
 export AWS_REGION=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r '.region')
 export AZS=($(aws ec2 describe-availability-zones --query 'AvailabilityZones[].ZoneName' --output text --region $AWS_REGION))
-aws kms create-alias --alias-name alias/eksworkshop --target-key-id $(aws kms create-key --query KeyMetadata.Arn --output text)
+aws kms create-alias --region $AWS_REGION --alias-name alias/eksworkshop --target-key-id $(aws kms create-key --query KeyMetadata.Arn --output text)
 export MASTER_ARN=$(aws kms describe-key --key-id alias/eksworkshop --query KeyMetadata.Arn --output text)
 echo "export MASTER_ARN=${MASTER_ARN}" | tee -a ~/.bash_profile
 
