@@ -4,7 +4,7 @@ rm -vf ${HOME}/.aws/credentials
 
 #Creating IAM Role 
 echo "Creating IAM Role"
-aws iam create-role --role-name eksworkshop-admin --assume-role-policy-document file:///home/ec2-user/environment/automation/scripts/policy.json
+aws iam create-role --role-name eksworkshop-admin --assume-role-policy-document file:///home/ec2-user/environment/eks-workshop/scripts/policy.json
 aws iam attach-role-policy --role-name eksworkshop-admin --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
 aws iam create-instance-profile --instance-profile-name eksworkshop-admin
 aws iam add-role-to-instance-profile --role-name eksworkshop-admin --instance-profile-name eksworkshop-admin
