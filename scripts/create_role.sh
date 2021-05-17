@@ -1,4 +1,6 @@
 #!/bin/sh
+#Removing Credentials file 
+rm -vf ${HOME}/.aws/credentials
 
 #Creating IAM Role 
 echo "Creating IAM Role"
