@@ -1,6 +1,6 @@
 #!/bin/sh
 
-unset AWS_DEFAULT_REGION
+#unset AWS_DEFAULT_REGION
 unset AWS_ACCESS_KEY_ID
 unset AWS_SECRET_ACCESS_KEY
 unset AWS_SESSION_TOKEN
@@ -41,8 +41,13 @@ echo "Creating KMS Customer Managed Key for EKS"
 export ACCOUNT_ID=$(aws sts get-caller-identity --output text --query Account)
 export AWS_REGION=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r '.region')
 export AZS=($(aws ec2 describe-availability-zones --query 'AvailabilityZones[].ZoneName' --output text --region $AWS_REGION))
+echo $AWS_REGION
+if [ -z $AWS_REGION ]; then 
+	AWS_REGION=$AWS_DEFAULT_REGION
+fi
+echo $AWS_REGION
 aws kms create-alias --region $AWS_REGION --alias-name alias/eksworkshop --target-key-id $(aws kms create-key --query KeyMetadata.Arn --output text)
-export MASTER_ARN=$(aws kms describe-key --key-id alias/eksworkshop --query KeyMetadata.Arn --output text)
+export MASTER_ARN=$(aws kms describe-key --region $AWS_REGION  --key-id alias/eksworkshop --query KeyMetadata.Arn --output text)
 echo "export MASTER_ARN=${MASTER_ARN}" | tee -a ~/.bash_profile
 
 echo "Installing eksctl"
